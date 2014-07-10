@@ -2,7 +2,7 @@
 class WrongObjectForState(TypeError):
     pass
 
-def require_state(state_class):
+def require_state(state_class, *state_args, **state_kwargs):
     '''
     Can decorate a function or class.
 
@@ -24,7 +24,7 @@ def require_state(state_class):
 
             For TestCases, also runs setUp() and tearDown()
             '''
-            state = state_class()
+            state = state_class(*state_args, **state_kwargs)
             if hasattr(obj, 'setUp'):  # IE, a TestCase
                 old_setUp = obj.setUp
                 def new_setup(*args, **kwargs):
@@ -49,7 +49,7 @@ def require_state(state_class):
                     test_bed = state.build()
                     try:
                         obj(state, *args, **kwargs)
-                    except TypeError:
+                    except TypeError, e:
                         raise WrongObjectForState("Please pass a TestCase or a function that takes test_bed as its first argument.  This decorator is not appropriate for other objects.")
                     state.destroy()
                 return new_func

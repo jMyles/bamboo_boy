@@ -22,7 +22,11 @@ class State(object):
         Add the result of a Factory.create_batch to this State's objects dict.
         '''
         factory_result = factory.create_batch(quantity, **kwargs)
-        self.objects.setdefault(factory, []).append(factory_result)
+        try:
+            self.objects.setdefault(factory, []).append(factory_result)
+        except AttributeError, e:
+            message = "%s -- Did you forget to run the __init__ of the parent State?" % e.message
+            raise AttributeError(message)
         return factory_result
 
 
