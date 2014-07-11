@@ -7,14 +7,14 @@ class Clump(object):
         self.objects = {}
         self.subcanopies = {}
 
-    def consume_clump(self, clump_class):
+    def build_subcanopy_from_clump(self, clump_class):
         '''
         Takes 1 or more children of Clump.
         Builds each, adding their objects as values to a dict, with the class name as a value.
         Adds the dict as self.constituent_clumps.
         '''
         clump = clump_class()
-        clump.build()
+        clump.build_canopy()
         self.subcanopies[clump_class.__name__] = clump
 
     def include_factory(self, factory, quantity, **kwargs):
@@ -29,10 +29,9 @@ class Clump(object):
             raise AttributeError(message)
         return factory_result
 
-
-    def build(self):
+    def build_canopy(self):
         for child_clump in self.constituent_clumps:
-            self.consume_clump(child_clump)
+            self.build_subcanopy_from_clump(child_clump)
 
-    def destroy(self):
+    def destroy_canopy(self):
         pass

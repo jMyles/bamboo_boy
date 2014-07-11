@@ -69,3 +69,8 @@ class CanopyTests(TestCase):
                              "This a a thing on a child clump.")
 
         clumped_function()
+
+    def test_unbuilt_clump_has_no_subcanopies(self):
+
+        with self.assertRaises(AttributeError):
+            print Clump.subcanopies

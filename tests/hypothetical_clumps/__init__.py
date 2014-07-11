@@ -3,7 +3,7 @@ from models import FakeModel
 
 class UndifferentiatedClump(Clump):
 
-    def build(self):
+    def build_canopy(self):
         self.thing = "This is a thing."
 
 
@@ -19,12 +19,12 @@ class UndifferentiatedClumpWithFactory(Clump):
         self.quantity = quantity
         super(UndifferentiatedClumpWithFactory, self).__init__(*args, **kwargs)
 
-    def build(self):
+    def build_canopy(self):
      self.include_factory(FakeFactory, self.quantity)
 
 
 class ChildClump(Clump):
-    def build(self):
+    def build_canopy(self):
         self.small_thing = "This a a thing on a child clump."
 
 
