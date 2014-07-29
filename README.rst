@@ -15,29 +15,9 @@ The "Bamboo" is the basis of the implementation metaphor:
 -  The canopy is used to access the objects. A function is said to be
    running "with a canopy" if it uses the @with\_canopy decorator.
 
-Maybe you already have the following Thing and its Factory.
------------------------------------------------------------
-
-.. code:: python
-
-    import factory
-    
-    
-    class Thing(object):
-        def do_your_thing(self):
-            return True
-    
-        
-    class ThingFactory(factory.Factory):
-        class Meta:
-            model = Thing
-Now, you can create a "Clump" of reusable logic.
-------------------------------------------------
-
 .. code:: python
 
     from bamboo_boy.materials import Clump
-    
     
     class ThingExists(Clump):
         '''
@@ -45,60 +25,41 @@ Now, you can create a "Clump" of reusable logic.
         '''
         def build_canopy(self):
             self.include_factory(ThingFactory, 3)  # We can also include *args and **kwargs here; they'll be passed on to the factory
+
+Quickstart
+==========
+
 Then, in a test:
-----------------
 
 .. code:: python
 
-    import unittest
     from bamboo_boy.utils import with_canopy
-    
+    import unittest
     
     @with_canopy(ThingExists)
-    class TestThings(unittest.TestCase):
+    class ThingTests(unittest.TestCase):
     
         def test_that_thing_does_its_thing(self):
-            lists_of_things = self.canopy.objects[ThingFactory]
-            first_list_of_things = lists_of_things[0]
-            first_thing = first_list_of_things[0]
+            things = self.canopy.objects[ThingFactory]
+            first_thing = things[0]
             self.assertTrue(first_thing.do_your_thing())
 .. code:: python
 
     %load_ext ipython_nose
-
-.. parsed-literal::
-
-    The ipython_nose extension is already loaded. To reload it, use:
-      %reload_ext ipython_nose
-
-
 .. code:: python
 
-    %nose
+    def test_arithmetic():
+        assert 1+1 == 2
+.. code:: python
+
+    %nose -v
 
 
 .. raw:: html
 
-    <div id="ipython_nose_cbdf26a98ed94655b2571e327eb28d00"></div>
+    <div id="ipython_nose_acc782ea571e42d7a9c8f82f923f04f8"></div>
 
 
-
-
-.. parsed-literal::
-
-    DEBUG:factory.generate:BaseFactory: Preparing __main__.ThingFactory(extra={})
-    DEBUG:factory.generate:<class '__main__.ThingFactory'>: Setting up next sequence (0)
-    DEBUG:factory.containers:LazyStub: Computing values for __main__.ThingFactory()
-    DEBUG:factory.containers:LazyStub: Computed values, got __main__.ThingFactory()
-    DEBUG:factory.generate:BaseFactory: Generating __main__.ThingFactory()
-    DEBUG:factory.generate:BaseFactory: Preparing __main__.ThingFactory(extra={})
-    DEBUG:factory.containers:LazyStub: Computing values for __main__.ThingFactory()
-    DEBUG:factory.containers:LazyStub: Computed values, got __main__.ThingFactory()
-    DEBUG:factory.generate:BaseFactory: Generating __main__.ThingFactory()
-    DEBUG:factory.generate:BaseFactory: Preparing __main__.ThingFactory(extra={})
-    DEBUG:factory.containers:LazyStub: Computing values for __main__.ThingFactory()
-    DEBUG:factory.containers:LazyStub: Computed values, got __main__.ThingFactory()
-    DEBUG:factory.generate:BaseFactory: Generating __main__.ThingFactory()
 
 
 
@@ -217,4 +178,6 @@ Then, in a test:
           1/1 tests passed
         </div>
         
+
+
 
