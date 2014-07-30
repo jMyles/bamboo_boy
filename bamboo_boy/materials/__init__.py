@@ -2,7 +2,7 @@ class Clump(object):
 
     constituent_clumps = {}
 
-    def __init__(self):
+    def __init__(self, obj, *args, **kwargs):
         self.factory_configs = []
         self.objects = {}
         self.subcanopies = {}
@@ -29,9 +29,15 @@ class Clump(object):
             raise AttributeError(message)
         return factory_result
 
-    def build_canopy(self):
+    def deliver_canopy(self):
         for child_clump in self.constituent_clumps:
             self.build_subcanopy_from_clump(child_clump)
+
+    def retract_canopy(self):
+        pass
+
+    def build_canopy(self):
+        pass
 
     def destroy_canopy(self):
         pass

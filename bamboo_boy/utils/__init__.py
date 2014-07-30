@@ -25,16 +25,19 @@ def with_canopy(clump_class, *clump_args, **clump_kwargs):
 
             For TestCases, also runs setUp() and tearDown()
             '''
-            clump = clump_class(*clump_args, **clump_kwargs)
+            clump = clump_class(*clump_args, obj=obj, **clump_kwargs)
             if hasattr(obj, 'setUp'):  # IE, a TestCase
                 old_setUp = obj.setUp
+
                 def new_setup(*args, **kwargs):
                     clump.build_canopy()
+                    clump.deliver_canopy()
                     old_setUp(*args, **kwargs)
 
-
                 old_tearDown = obj.tearDown
+
                 def new_teardown(*args, **kwargs):
+                    clump.retract_canopy()
                     clump.destroy_canopy()
                     old_tearDown(*args, **kwargs)
 
@@ -47,11 +50,13 @@ def with_canopy(clump_class, *clump_args, **clump_kwargs):
 
             else:
                 def new_func():
-                    canopy = clump.build_canopy()
+                    clump.build_canopy()
+                    clump.deliver_canopy()
                     try:
                         obj(clump, *args, **kwargs)
                     except TypeError, e:
                         raise UnclumpableObject("Please pass a TestCase or a function that takes canopy as its first argument.  This decorator is not appropriate for other objects.")
+                    clump.retract_canopy()
                     clump.destroy_canopy()
                 return new_func
         canopy = clump_run()
