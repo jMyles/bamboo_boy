@@ -24,13 +24,15 @@ class LoginClump(Clump):
         super(LoginClump, self).deliver_canopy()
 
     def retract_canopy(self):
+        self.logged_in = False
         super(LoginClump, self).retract_canopy()
 
     def login(self):
         SessionStore = import_module(settings.SESSION_ENGINE).SessionStore
         sesh = SessionStore()
-        sesh.save()
+        sesh.save()  # To generate session_id
 
+        # We'll need a request to call the login() function
         request = RequestFactory()
         request.session = sesh
         request.META = {}
@@ -47,7 +49,7 @@ class LoginClump(Clump):
             print "Target: %s" % target
             self.obj.wd.get(target)
         except AttributeError:
-            raise TypeError("In order to build this canopy, the decorated class must have attributes 'target' (a url) and 'wd' (a WebDriver instance).  Please modify %s to include these." % self.obj)
+            raise TypeError("In order to build this canopy, the decorated class must have an attribute 'wd' (a WebDriver instance).  Please modify %s to include this." % self.obj)
 
         request.session.save()
 

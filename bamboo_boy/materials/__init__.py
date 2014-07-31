@@ -3,17 +3,18 @@ class Clump(object):
     constituent_clumps = {}
 
     def __init__(self, obj, *args, **kwargs):
+        self.obj = obj
         self.factory_configs = []
         self.objects = {}
         self.subcanopies = {}
 
-    def build_subcanopy_from_clump(self, clump_class):
+    def build_subcanopy_from_clump(self, clump_class, obj):
         '''
         Takes 1 or more children of Clump.
         Builds each, adding their objects as values to a dict, with the class name as a value.
         Adds the dict as self.constituent_clumps.
         '''
-        clump = clump_class()
+        clump = clump_class(obj )
         clump.build_canopy()
         self.subcanopies[clump_class.__name__] = clump
 
@@ -31,7 +32,7 @@ class Clump(object):
 
     def deliver_canopy(self):
         for child_clump in self.constituent_clumps:
-            self.build_subcanopy_from_clump(child_clump)
+            self.build_subcanopy_from_clump(child_clump, self.obj)
 
     def retract_canopy(self):
         pass
